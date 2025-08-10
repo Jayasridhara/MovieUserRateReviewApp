@@ -1,33 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import loading  from "./assets/loding.gif"
+import { createBrowserRouter, RouterProvider } from "react-router";
+import MovieDetailsPage from "./pages/MovieDetailsPage";
+import { movieDetailsLoader } from "./Loader/movieDetailsLoader";
+import { searchPageLoader } from "./Loader/searchPageLoader";
+import Layout from "./component/Layout";
+import SearchPage from "./component/SearchPage";
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
+  const routes= [
+  {
+    path: '/',
+    element: <Layout />,
+    loader: searchPageLoader,
+    hydrateFallbackElement:<div className="flex h-screen justify-center items-center"><img src={loading} alt="Loading…" className="mx-auto my-10" /></div> ,
+    children: [
+      {
+        index: true,
+        element: <SearchPage/>,
+        loader: searchPageLoader,
+        hydrateFallbackElement:<div className="flex h-screen justify-center items-center"><img src={loading} alt="Loading…" className="mx-auto my-10" /></div> ,
+      },
+      {
+        path: 'movie/:id',
+        element: <MovieDetailsPage />,
+        loader: movieDetailsLoader,
+        errorElement: <p className="p-4 text-red-500">Movie not found or failed to load.</p>,
+        hydrateFallbackElement:  <div className="flex h-screen justify-center items-center"><img src={loading} alt="Loading…" className="mx-auto my-10" /></div> ,
+      },
+      
+    ],
+  },
+];
+ const router = createBrowserRouter(routes, {
+  future: {
+    v7_relativeSplatPath: true,
+    v7_fetcherPersist: true,
+    v7_normalizeFormMethod: true,
+    v7_partialHydration: true,
+    v7_skipActionErrorRevalidation: true,
+  },
+});
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+       <RouterProvider
+      router={router}
+      future={{
+        v7_startTransition: true,
+      }}
+    />
+       
     </>
   )
 }

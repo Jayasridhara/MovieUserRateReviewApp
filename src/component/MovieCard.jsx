@@ -1,5 +1,6 @@
 
 
+
 import { Link } from 'react-router';
 import defaultImage from '../assets/default-image.jpg';
 const MovieCard = ({ movie }) =>{

@@ -1,15 +1,38 @@
-import {  useLoaderData, useNavigate, useOutletContext } from 'react-router';
+
 
 import Pagination from './Pagination';
 import MovieCard from './MovieCard';
 import Popup from './Popup';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { MovieContext } from './Layout';
+import { useLoaderData, useLocation, useNavigate } from 'react-router';
+import { getMovieDetails } from '../services/omdbService';
 
 export default function SearchPage() {
   const navigate = useNavigate();
-  const { movies, totalResults, query, page, type, error } = useLoaderData();
- const {showErrorPopup,setShowErrorPopup}=useContext(MovieContext);
+  const location=useLocation();
+  const { movies, genre,totalResults, page, type } = useLoaderData();
+   const [detailedMovies, setDetailedMovies] = useState([]);
+    const {showErrorPopup,setShowErrorPopup}=useContext(MovieContext);
+//fetch genre from movie details 
+  useEffect(() => {
+    if (location.state?.fromDetails) {
+      setShowErrorPopup(false);
+      window.history.replaceState({}, '', window.location.pathname + window.location.search);
+    }
+  }, [location.state, setShowErrorPopup]);
+ const filtered = movies
+    .filter(m => m.Poster !== 'N/A')
+    .filter(m => !genre || m.Genre.includes(genre))
+    .slice(0, 9);
+
+ useEffect(() => {
+    if (movies.length && filtered.length === 0) {
+      setShowErrorPopup(true);
+    } else {
+      setShowErrorPopup(false);
+    }
+  }, [movies, filtered, setShowErrorPopup]);
    const handlePageChange = (newPage) => {
     // Get the search parameters from the current URL
     const currentParams = new URLSearchParams(location.search);
@@ -44,12 +67,22 @@ export default function SearchPage() {
 
         {movies.length ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-full font-poppins">
-            {movies.filter(m => m.Poster !== 'N/A').slice(0, 9).map(movie => (
-              <MovieCard key={movie.imdbID} movie={movie} />
-            ))}
+             {filtered.map(movie => (
+                <MovieCard key={movie.imdbID} movie={movie} />
+              ))
+            }
           </div>
         ) : (
-          <p className="text-center text-gray-500 mt-10">No movies found.</p>
+
+          !showErrorPopup && (
+            <Popup
+            message="No movies found for this search."  
+            onClose={() => {
+              setShowErrorPopup(false);
+              navigate('/'); // Clear query params after user confirms
+            }}
+          />
+          )
         )}
       </div>
        <div className="fixed bottom-0 left-0 w-full bg-white z-20 p-2 font-poppins">

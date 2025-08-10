@@ -1,6 +1,8 @@
-import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router"
+
+import { Outlet, useLoaderData, useLocation, useNavigate } from "react-router";
 import Navbar from "./Navbar"
 import { createContext, useEffect, useState } from "react";
+
 export const MovieContext = createContext();
 function Layout() {
 
@@ -18,7 +20,10 @@ function Layout() {
     if (error) {
       setShowErrorPopup(true);
     }
-  
+    else
+    {
+      setShowErrorPopup(false);
+    }
   }, [error]);
 
   return (

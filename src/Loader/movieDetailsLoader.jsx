@@ -1,6 +1,7 @@
 import { getMovieDetails } from "../services/omdbService";
 
 
+
 export const movieDetailsLoader = async ({ params }) => {
   const data = await getMovieDetails(params.id);
 

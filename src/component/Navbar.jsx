@@ -1,13 +1,15 @@
 import SearchBar from './SearchBar';
 import FilterDropdown from './FilterDropdown';
-import {  useEffect, useState } from 'react';
-
-import {  Link, useLoaderData, useLocation, useNavigate } from 'react-router';
-
-
+import { useEffect, useState } from 'react';
+import { Link, useLoaderData, useLocation, useNavigate } from 'react-router';
+const years = Array.from({ length: 50 }, (_, i) => `${2001 + i}`);
+const genres = ["Action", "Adventure", "Comedy", "Animation", "Sci-Fi"];
 export default function Navbar({loaderData}) {
       
- const { movies, query, page, type, error } = useLoaderData();
+  const { query, page, type, year } = useLoaderData();
+  const [genre, setGenre] = useState('');
+  const [codeYear, setCodeYear] = useState(year || '');
+
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchHistory, setSearchHistory] = useState([]);
@@ -47,6 +49,14 @@ export default function Navbar({loaderData}) {
     // Navigate without a 'q' parameter. The useEffect above will handle keeping the search bar empty.
     navigate(`/?page=1&type=${selectedType}`);
   };
+    const applyFilters = () => {
+    const params = new URLSearchParams();
+    if (query) params.set('q', query);
+    if (type) params.set('type', type);
+    if (codeYear) params.set('year', codeYear);
+      if (genre) params.set('genre', genre);
+    navigate(`/?${params.toString()}&page=1`);
+  };
 
   return (
         <>
@@ -64,11 +74,21 @@ export default function Navbar({loaderData}) {
                     isSearchFocused={isSearchFocused}
                     setIsSearchFocused={setIsSearchFocused}
                   />
-                  <FilterDropdown
-                    selectedType={type}
-                    onChange={handleTypeChange}
-                    setSearchTerm={setSearchTerm}
-                  />    
+                  <div className="filters">
+                    <FilterDropdown
+                      label="Year"
+                      options={years.map(y => ({ value: y, label: y }))}
+                      selected={codeYear}
+                      onChange={setCodeYear}
+                    />
+                    <FilterDropdown
+                      label="Genre"
+                      options={genres.map(g => ({ value: g, label: g }))}
+                      selected={genre}
+                      onChange={setGenre}
+                    />
+                    <button onClick={applyFilters}>Apply</button>
+                </div>
         </div>)}
       </div>
     
