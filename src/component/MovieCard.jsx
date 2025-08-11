@@ -11,7 +11,7 @@ const MovieCard = ({ movie }) =>{
       
 return(
   <Link to={`/movie/${movie.imdbID}`} className="block  group h-full">
-    <div className="bg-white rounded shadow py-2  flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-xl h-full font-poppins" >
+    <div className=" bg-white rounded shadow py-2  flex flex-col justify-between transform transition-transform duration-300 hover:scale-105 hover:shadow-xl h-full font-poppins" >
          <img
           src={posterUrl}
           alt={movie.Title}

@@ -29,7 +29,7 @@ const FilterDropdown = ({ label, options, selected, onChange }) => {
       </button>
 
       {open && (
-        <div className="absolute mt-1 w-40 bg-white border rounded shadow-md z-10">
+        <div className="absolute mt-1 w-30 bg-white border rounded shadow-md z-10">
           {options.map((opt) => (
             <button
               key={opt.value}
