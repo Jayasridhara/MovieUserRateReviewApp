@@ -48,15 +48,16 @@ export default function Navbar() {
     navigate(`/?q=${termToSearch}&page=1&type=${type}`);
   };
 
-  const applyFilters = () => {
-    const params = new URLSearchParams();
-    if (query) params.set('q', query);
-    if (type) params.set('type', type);
-    if (codeYear) params.set('year', codeYear);
-    if (genre) params.set('genre', genre);
-    navigate(`/?${params.toString()}&page=1`);
-    setShowFilter(false);
-  };
+ const applyFilters = () => {
+  const params = new URLSearchParams();
+  if (type) params.set('type', type);
+  if (codeYear) params.set('year', codeYear);
+  if (genre) params.set('genre', genre);
+
+  setSearchTerm(''); // Clear the search bar
+  navigate(`/?${params.toString()}&page=1`);
+  setShowFilter(false);
+};
 
   const resetFilters = () => {
     setCodeYear('');
