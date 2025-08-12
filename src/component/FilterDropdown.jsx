@@ -22,14 +22,14 @@ const FilterDropdown = ({ label, options, selected, onChange }) => {
   return (
     <div className="relative inline-block text-left" ref={ref}>
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => setOpen(o => !o)}
         className="p-2 bg-gray-100 rounded hover:bg-gray-200 focus:outline-none"
       >
         {currentLabel}
       </button>
 
       {open && (
-        <div className="absolute mt-1 w-30 bg-white border rounded shadow-md z-10">
+        <div className="absolute mt-1 w-30 bg-white border rounded shadow-md z-10 max-h-60 overflow-y-auto">
           {options.map((opt) => (
             <button
               key={opt.value}

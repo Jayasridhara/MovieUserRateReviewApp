@@ -2,14 +2,20 @@ import SearchBar from './SearchBar';
 import FilterDropdown from './FilterDropdown';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLoaderData, useLocation, useNavigate } from 'react-router';
-import { FaFilter } from 'react-icons/fa';
+import { FaFilter, FaSyncAlt } from 'react-icons/fa';
 const years = Array.from({ length: 50 }, (_, i) => `${2001 + i}`);
 const genres = ["Action", "Adventure", "Comedy", "Animation", "Sci-Fi"];
+const ratings = [
+  { value: 'below5', label: 'Below 5' },
+  { value: '5to8', label: '5 - 8' },
+  { value: 'above8', label: 'Above 8' }
+];
 
 export default function Navbar() {
-  const { query, page, type, year } = useLoaderData();
-  const [genre, setGenre] = useState('');
+  const { query, type, year, genre: initialGenre, rating: initialRating } = useLoaderData();
+  const [genre, setGenre] = useState(initialGenre || '');
   const [codeYear, setCodeYear] = useState(year || '');
+  const [rating, setRating] = useState(initialRating || '');
   const [searchTerm, setSearchTerm] = useState('');
   const [searchHistory, setSearchHistory] = useState([]);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -45,25 +51,36 @@ export default function Navbar() {
       return newHistory.slice(0, 5);
     });
 
-    navigate(`/?q=${termToSearch}&page=1&type=${type}`);
+    const params = new URLSearchParams();
+    params.set('q', termToSearch);
+    if (type) params.set('type', type);
+    navigate(`/?${params.toString()}&page=1`);
   };
 
- const applyFilters = () => {
-  const params = new URLSearchParams();
-  if (type) params.set('type', type);
-  if (codeYear) params.set('year', codeYear);
-  if (genre) params.set('genre', genre);
+  const updateFilters = (updatedYear, updatedGenre, updatedRating) => {
+    const params = new URLSearchParams();
+    if (updatedYear) params.set('year', updatedYear);
+    if (updatedGenre) params.set('genre', updatedGenre);
+    if (updatedRating) params.set('rating', updatedRating);
+    if (type) params.set('type', type);
 
-  setSearchTerm(''); // Clear the search bar
-  navigate(`/?${params.toString()}&page=1`);
-  setShowFilter(false);
-};
+    setSearchTerm(''); // clear search bar when filters used
+    navigate(`/?${params.toString()}&page=1`);
+  };
 
-  const resetFilters = () => {
-    setCodeYear('');
-    setGenre('');
-    setShowFilter(false);
-    navigate(`/?page=1`);
+  const handleYearChange = (selectedYear) => {
+    setCodeYear(selectedYear);
+    updateFilters(selectedYear, genre, rating);
+  };
+
+  const handleGenreChange = (selectedGenre) => {
+    setGenre(selectedGenre);
+    updateFilters(codeYear, selectedGenre, rating);
+  };
+
+  const handleRatingChange = (selectedRating) => {
+    setRating(selectedRating);
+    updateFilters(codeYear, genre, selectedRating);
   };
 
   return (
@@ -91,39 +108,50 @@ export default function Navbar() {
             </button>
 
             {showFilter && (
-              <div className="absolute top-12 right-0 bg-white shadow-lg border p-4 rounded w-60 z-30">
-                <h3 className="font-semibold mb-2">Filters</h3>
-                <div className="flex justify-center gap-2">
-                <div className="mb-2">
+              <div
+                  className="
+                    absolute
+                    top-full left-0 w-47 rounded-none border-t border-gray-200 bg-white p-4 z-30
+                    sm:top-12 sm:right-0 sm:left-auto sm:w-60 sm:rounded sm:border sm:shadow-lg sm:border-gray-200
+                  "
+                >
+                <div className='flex justify-between'>
+                  <h3 className="font-semibold mb-2">Filters</h3>
+                  {(codeYear || genre || rating) && (
+                    <button
+                      title="Reset filters"
+                      className="p-2 text-red-600 bg-red-100 rounded hover:bg-red-200"
+                      onClick={() => {
+                        setCodeYear('');
+                        setGenre('');
+                        setRating('');
+                        setSearchTerm('');
+                        navigate(`/?page=1`);
+                      }}
+                    >
+                      <FaSyncAlt />
+                    </button>
+                  )}
+                </div>
+                <div className="flex flex-col gap-4">
                   <FilterDropdown
                     label="Year"
                     options={years.map(y => ({ value: y, label: y }))}
                     selected={codeYear}
-                    onChange={setCodeYear}
+                    onChange={handleYearChange}
                   />
-                </div>
-                <div className="mb-4">
                   <FilterDropdown
                     label="Genre"
                     options={genres.map(g => ({ value: g, label: g }))}
                     selected={genre}
-                    onChange={setGenre}
+                    onChange={handleGenreChange}
                   />
-                </div>
-              </div>
-                <div className="flex justify-between gap-2">
-                  <button
-                    className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700"
-                    onClick={applyFilters}
-                  >
-                    Apply
-                  </button>
-                  <button
-                    className="bg-gray-300 text-gray-800 px-4 py-1 rounded hover:bg-gray-400"
-                    onClick={resetFilters}
-                  >
-                    Reset
-                  </button>
+                  <FilterDropdown
+                    label="Rating"
+                    options={ratings}
+                    selected={rating}
+                    onChange={handleRatingChange}
+                  />
                 </div>
               </div>
             )}

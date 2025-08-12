@@ -19,15 +19,20 @@ return(
             e.currentTarget.onerror = null; // Prevent infinite loop
             e.currentTarget.src=defaultImage;
           }}  
-          className="w-full h-50  object-cover rounded"
+          className="w-full h-55  object-cover rounded"
         />
       <div className="mt-2 flex flex-col justify-between flex-grow px-2">
         <h3 className="font-semibold text-base md:text-lg group-hover:text-blue-600 transition-colors">
           {movie.Title}
         </h3>
-        <p className="text-gray-500 text-sm mt-auto">
-          {movie.Year} • <span className="capitalize">{movie.Type}</span>
-        </p>
+       <div className="flex justify-between items-center text-gray-500 text-sm mt-auto">
+            <span>
+              {movie.Year} • {movie.Genre || "Unknown Genre"}
+            </span>
+            <span className="font-semibold text-yellow-500">
+              ⭐ {movie.imdbRating || "N/A"}
+            </span>
+          </div>
       </div>
     </div>
   </Link>
