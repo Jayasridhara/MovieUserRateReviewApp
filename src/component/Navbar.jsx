@@ -85,7 +85,7 @@ export default function Navbar() {
 
   return (
     <div className="fixed top-0 left-0 w-full bg-white z-20 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <Link to="/" className="text-2xl font-bold font-lexend">🎬 Cine Search X</Link>
+      <Link to="/" className="text-2xl font-bold font-lexend">🎬 Movie Flix</Link>
 
       {!isDetailPage && (
         <div className="flex flex-col sm:flex-row gap-4 items-center w-full sm:w-auto">
@@ -140,7 +140,7 @@ export default function Navbar() {
                     selected={codeYear}
                     onChange={handleYearChange}
                   />
-                  <FilterDropdown
+                    <FilterDropdown
                     label="Genre"
                     options={genres.map(g => ({ value: g, label: g }))}
                     selected={genre}

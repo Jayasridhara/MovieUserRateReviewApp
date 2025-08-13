@@ -19,7 +19,7 @@ return(
             e.currentTarget.onerror = null; // Prevent infinite loop
             e.currentTarget.src=defaultImage;
           }}  
-          className="w-full h-55  object-cover rounded"
+          className="w-full h-50  object-cover rounded"
         />
       <div className="mt-2 flex flex-col justify-between flex-grow px-2">
         <h3 className="font-semibold text-base md:text-lg group-hover:text-blue-600 transition-colors">

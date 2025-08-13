@@ -1,4 +1,4 @@
-import { getMovieDetails, searchMovies } from "../services/omdbService";
+import {  getMovieDetails, searchMovies } from "../services/omdbService";
 export const searchPageLoader = async ({ request }) => {
   const url = new URL(request.url);
   const qParam = url.searchParams.get('q');
