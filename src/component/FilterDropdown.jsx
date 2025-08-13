@@ -4,40 +4,62 @@ import { useEffect, useRef, useState } from "react";
 
 
 const FilterDropdown = ({ label, options, selected, onChange }) => {
-  const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const ref = useRef(null);
-
-  useEffect(() => {
-    const handleOutside = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleOutside);
-    return () => document.removeEventListener("mousedown", handleOutside);
-  }, []);
 
   const currentLabel = options.find((o) => o.value === selected)?.label || label;
 
+  // Close the dropdown if the user clicks outside of it
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
   return (
-    <div className="relative inline-block text-left" ref={ref}>
+    <div className="w-full" ref={ref}>
       <button
-        onClick={() => setOpen(o => !o)}
-        className="p-2 bg-gray-100 rounded hover:bg-gray-200 focus:outline-none"
+        onClick={() => setIsOpen((o) => !o)}
+        className="p-2 w-full bg-gray-100 rounded hover:bg-gray-200 focus:outline-none flex justify-between items-center"
       >
-        {currentLabel}
+        <span>{currentLabel}</span>
+        <svg
+          className={`w-4 h-4 transition-transform transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M19 9l-7 7-7-7"
+          ></path>
+        </svg>
       </button>
 
-      {open && (
-        <div className="absolute mt-1 w-30 bg-white border rounded shadow-md z-10 max-h-60 overflow-y-auto">
+      {/* KEY CHANGE: The dropdown menu is no longer absolutely positioned. */}
+      {/* It now renders as a normal block element, creating an accordion effect. */}
+      {isOpen && (
+        <div className="mt-1 w-full bg-white border rounded-b-md shadow-inner max-h-48 overflow-y-auto">
           {options.map((opt) => (
             <button
               key={opt.value}
               onClick={() => {
                 onChange(opt.value);
-                setOpen(false);
+                setIsOpen(false); // Close the accordion after selection
               }}
-              className={`block w-full text-left px-4 py-2 hover:bg-gray-100 ${
+              className={`block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 ${
                 opt.value === selected ? "font-semibold text-blue-600" : ""
               }`}
             >

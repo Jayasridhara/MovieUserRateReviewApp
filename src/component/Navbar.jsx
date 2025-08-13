@@ -83,22 +83,36 @@ export default function Navbar() {
     updateFilters(codeYear, genre, selectedRating);
   };
 
+  const handleResetFilters = () => {
+    setCodeYear('');
+    setGenre('');
+    setRating('');
+    setSearchTerm('');
+    navigate(`/?page=1`);
+    setShowFilter(false); // Close filter on reset
+  };
+
   return (
-    <div className="fixed top-0 left-0 w-full bg-white z-20 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <Link to="/" className="text-2xl font-bold font-lexend">🎬 Movie Flix</Link>
+    <div className="fixed top-0 left-0 w-full bg-white z-20 p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shadow-sm">
+      <Link to="/" className="text-2xl font-bold font-lexend text-center ">🎬 Movie Flix</Link>
 
       {!isDetailPage && (
-        <div className="flex flex-col sm:flex-row gap-4 items-center w-full sm:w-auto">
-          <SearchBar
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            onSearch={handleSearch}
-            searchHistory={searchHistory}
-            isSearchFocused={isSearchFocused}
-            setIsSearchFocused={setIsSearchFocused}
-          />
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="flex-1">
+            <SearchBar
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              onSearch={handleSearch}
+              searchHistory={searchHistory}
+              isSearchFocused={isSearchFocused}
+              setIsSearchFocused={setIsSearchFocused}
+            />
+          </div>
 
+          {/* --- UNIFIED FILTER COMPONENT --- */}
+          {/* The ref is now on the container for the button and the panel */}
           <div className="relative" ref={filterRef}>
+            {/* This is now the ONLY filter button */}
             <button
               className="p-2 rounded bg-gray-200 hover:bg-gray-300 focus:outline-none"
               onClick={() => setShowFilter(prev => !prev)}
@@ -107,27 +121,22 @@ export default function Navbar() {
               <FaFilter />
             </button>
 
+            {/* This is now the ONLY filter panel */}
             {showFilter && (
               <div
-                  className="
-                    absolute
-                    top-full left-0 w-47 rounded-none border-t border-gray-200 bg-white p-4 z-30
-                    sm:top-12 sm:right-0 sm:left-auto sm:w-60 sm:rounded sm:border sm:shadow-lg sm:border-gray-200
-                  "
-                >
-                <div className='flex justify-between'>
-                  <h3 className="font-semibold mb-2">Filters</h3>
+                className={`
+                  absolute top-full mt-2 right-0 z-30
+                  w-[60vw]  max-w-sm rounded-lg border bg-white p-4 shadow-lg
+                  sm:w-60
+                `}
+              >
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="font-semibold">Filters</h3>
                   {(codeYear || genre || rating) && (
                     <button
                       title="Reset filters"
                       className="p-2 text-red-600 bg-red-100 rounded hover:bg-red-200"
-                      onClick={() => {
-                        setCodeYear('');
-                        setGenre('');
-                        setRating('');
-                        setSearchTerm('');
-                        navigate(`/?page=1`);
-                      }}
+                      onClick={handleResetFilters}
                     >
                       <FaSyncAlt />
                     </button>
@@ -140,7 +149,7 @@ export default function Navbar() {
                     selected={codeYear}
                     onChange={handleYearChange}
                   />
-                    <FilterDropdown
+                  <FilterDropdown
                     label="Genre"
                     options={genres.map(g => ({ value: g, label: g }))}
                     selected={genre}
