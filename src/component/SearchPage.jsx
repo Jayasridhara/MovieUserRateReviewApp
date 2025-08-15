@@ -23,8 +23,7 @@ export default function SearchPage() {
   }, [location.state, setShowErrorPopup]);
  const filtered = movies
     .filter(m => m.Poster !== 'N/A')
-    .filter(m => !genre || m.Genre.includes(genre))
-    .slice(0, 9);
+    .filter(m => !genre || m.Genre.includes(genre));
 
  useEffect(() => {
     if (movies.length && filtered.length === 0) {
@@ -66,7 +65,7 @@ export default function SearchPage() {
         )}
 
         {movies.length ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-full font-poppins">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 h-full font-poppins">
              {filtered.map(movie => (
                 <MovieCard key={movie.imdbID} movie={movie} />
               ))

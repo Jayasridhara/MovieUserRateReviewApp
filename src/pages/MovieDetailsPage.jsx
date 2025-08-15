@@ -50,7 +50,7 @@ const posterUrl =movie.Poster && movie.Poster !== "N/A"? movie.Poster: defaultIm
         <Stars movieId={movie.imdbID} count={5} />
       </div>
    <button
-      onClick={() => navigate("/", { state: { fromDetails: true } })} 
+      onClick={() => navigate((-1), { state: { fromDetails: true } })} 
       className=" cursor-pointer group self-start bg-blue-600 text-white px-5 py-2 rounded-lg transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 inline-flex items-center"
     >
       <span>Back to Search</span>
