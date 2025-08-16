@@ -30,7 +30,9 @@ function Layout() {
     <div className="h-full">
      <MovieContext.Provider value={{showErrorPopup,setShowErrorPopup,isDetailPage,navigate}}>
          <Navbar loaderData={loaderData}/>
+         
           <Outlet />
+        
      </MovieContext.Provider>
         
       

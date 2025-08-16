@@ -56,10 +56,11 @@ export default function SearchPage() {
       <div className=" pt-[72px] pb-[64px] p-4 flex-grow ">
       {showErrorPopup && (
           <Popup
+           isSuccess={false}
             message="No movies found for this search."  
             onClose={() => {
               setShowErrorPopup(false);
-              navigate('/'); // Clear query params after user confirms
+              navigate('/'); 
             }}
           />
         )}
@@ -75,6 +76,7 @@ export default function SearchPage() {
 
           !showErrorPopup && (
             <Popup
+            isSuccess={false}
             message="No movies found for this search."  
             onClose={() => {
               setShowErrorPopup(false);
