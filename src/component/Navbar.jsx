@@ -140,7 +140,9 @@ export default function Navbar() {
                     >
                       <FaSyncAlt />
                     </button>
+
                   )}
+
                 </div>
                 <div className="flex flex-col gap-4">
                   <FilterDropdown
@@ -165,6 +167,7 @@ export default function Navbar() {
               </div>
             )}
           </div>
+          
         </div>
       )}
     </div>
